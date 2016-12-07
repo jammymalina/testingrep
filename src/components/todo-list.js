@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import $ from 'jquery';
 
 import TodoItem from './todo-list-item';
 
@@ -10,11 +9,13 @@ class TodoList extends Component {
 
     render() {
         const items = this.props.items.map(todo => {
-            return <TodoItem id={`cecky${todo.id}`} key={todo.id} item={todo} />
+            return <TodoItem key={todo.id} item={todo} />
         });
         return (
-            <div className="panel-heading">
-                {items}
+            <div className="col-md-8 col-md-push-2 white-panel shadow-6dp">
+                <div className="panel-group" id="todo-list" role="tablist" aria-multiselectable="true">
+                    {items}
+                </div>
             </div>
         );
     }

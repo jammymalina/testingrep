@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import axios from 'axios';
 
 import TodoList from './components/todo-list.js';
-import bootstrap from 'bootstrap/dist/css/bootstrap.min.css';
+import customStyle from './style/custom.css';
 
 class TodoApp extends Component {
     constructor(props) {
@@ -16,8 +16,8 @@ class TodoApp extends Component {
 
     render() {
         return (
-            <div>
-                <TodoList ref="todolist" items={this.state.items}/>
+            <div className="row">
+                <TodoList ref="todolist" items={this.state.items} />
             </div>
         );
     }
@@ -35,4 +35,5 @@ class TodoApp extends Component {
 }
 
 ReactDOM.render(
-    <TodoApp></TodoApp>, document.getElementById('todoapp'));
+    <TodoApp/>, document.getElementById('todoapp')
+);
