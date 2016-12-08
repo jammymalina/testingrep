@@ -3,35 +3,35 @@
     "title": "Put out trash",
     "description": "Put out trash, don\"t forget to recycle.",
     "completed": false,
-    "priority": 2
+    "deadline": "01/01/2017"
 }, {
     "id": "32834b1e-dcfe-4578-8871-2dd6bc037329",
     "title": "Finish Trello",
     "description": "Finish all tasks in your Trello board. Don\"t forget to take regular breaks",
     "completed": false,
-    "priority": 1
+    "deadline": "09/12/2016"
 }, {
     "id": "a4bf1187-84b6-4bab-9555-b57fc53db555",
     "title": "Buy soy milk",
     "description": "Don\"t forget to buy soy milk next time you visit a store.",
     "completed": false,
-    "priority": 3
+    "deadline": "07/12/2016"
 }, {
     "id": "32d3f3d7-7a91-468b-8631-82d79f390c27",
     "title": "Walk the dog",
     "description": "Walk the dog, ask the hot neighbour out.",
     "completed": false,
-    "priority": 2
+    "deadline": "15/12/2016"
 }, {
     "id": "f02debdb-569c-4269-a15b-5c121b8b171a",
     "title": "Read the poem",
     "description": "Read the poem written by your sister, if you don't she will kill you.",
     "completed": false,
-    "priority": 3
+    "deadline": "17/12/2016"
 }, {
     "id": "0fc4456a-42da-4492-bd25-f94e3a5e1bed",
     "title": "Call Dave",
     "description": "Call Dave about the Nehalem project, he is getting anxious.",
     "completed": false,
-    "priority": 1
+    "deadline": "21/12/2016"
 }]

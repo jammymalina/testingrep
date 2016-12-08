@@ -19,13 +19,12 @@ class TodoApp extends Component {
             btnCaption: 'Add item'
         };
 
-        for (let i = 0; i < 10; i++)
-            console.log(uuidV4());
-
         this.removeItem = this.removeItem.bind(this);
         this.removeCompleted = this.removeCompleted.bind(this);
         this.setCompleted = this.setCompleted.bind(this);
-        this.addCurrentItem = this.addCurrentItem.bind(this);
+        this.handleUpdateClick = this.handleUpdateClick.bind(this);
+        this.addItem = this.addItem.bind(this);
+        this.handleFormSubmit = this.handleFormSubmit.bind(this);
     }
 
     render() {
@@ -38,12 +37,13 @@ class TodoApp extends Component {
                     transitionAppear = {true} transitionAppearTimeout = {timeout}
                     transitionEnterTimeout = {timeout} transitionLeaveTimeout = {timeout}>*/
                     <TodoForm
-                        key="f8z0kjsmzn"
+                        key={uuidV4()}
+                        defaultDate={this.state.currentItem.deadline}
                         title={this.state.currentItem.title}
                         description={this.state.currentItem.description}
                         btnCaption={this.state.btnCaption}
                         handleCancelClick={() => this.setState({currentItem: null})}
-                        handleFormSubmit={this.addCurrentItem} />
+                        handleFormSubmit={this.handleFormSubmit} />
                 /*</ReactCSSTransitionGroup>*/
             );
         } else {
@@ -52,13 +52,20 @@ class TodoApp extends Component {
                     transitionName = "animation"
                     transitionAppear = {true} transitionAppearTimeout = {timeout}
                     transitionEnterTimeout = {timeout} transitionLeaveTimeout = {timeout}>*/
-                    <div key="4ci4ekoipl" style={{marginBottom: '20px'}}>
+                    <div key={uuidV4()} style={{marginBottom: '20px'}}>
                         <button
                             className="btn btn-primary"
                             style={{marginRight: '10px'}}
                             onClick={() => this.setState({
-                                currentItem: {title: '', description: ''},
-                                btnCaption: 'Add item'})}>
+                                currentItem: {
+                                    title: '',
+                                    description: '',
+                                    id: uuidV4(),
+                                    completed: false,
+                                    deadline: null
+                                },
+                                btnCaption: 'Add item'}
+                            )}>
                             <span className="glyphicon glyphicon-plus"></span>
                         </button>
                         <button className="btn btn-danger" onClick={this.removeCompleted}>Remove completed items</button>
@@ -69,11 +76,34 @@ class TodoApp extends Component {
         return (
             <div className="row">
                 <div className="col-md-8 col-md-push-2 white-panel shadow-6dp">
-                    <TodoList ref="todolist" items={this.state.items} removeItem={this.removeItem} setCompleted={this.setCompleted} />
+                    <TodoList ref="todolist" items={this.state.items} removeItem={this.removeItem} setCompleted={this.setCompleted} handleUpdateClick={this.handleUpdateClick} />
                     {formElement}
                 </div>
             </div>
         );
+    }
+
+    handleFormSubmit(title, description, deadline) {
+        const item = {
+            id: this.state.currentItem.id,
+            completed: this.state.currentItem.completed,
+            title,
+            description,
+            deadline
+        };
+        this.addItem(item);
+        this.setState({
+            currentItem: null
+        });
+    }
+
+    handleUpdateClick(id) {
+        const item = _.find(this.state.items, ['id', id]);
+        console.log(item);
+        this.setState({
+            currentItem: item ? item : null,
+            btnCaption: 'Update item'
+        });
     }
 
     componentDidMount() {
@@ -91,14 +121,18 @@ class TodoApp extends Component {
         const items = _.filter(this.state.items, (todo) => {
             return !todo.completed;
         });
-        this.setState({ items });
+        this.setState({
+            items
+        });
     }
 
     removeItem(id) {
         const items = _.filter(this.state.items, (todo) => {
             return todo.id !== id;
         });
-        this.setState({ items });
+        this.setState({
+            items
+        });
     }
 
     setCompleted(id, completed) {
@@ -111,8 +145,21 @@ class TodoApp extends Component {
         this.setState({ items });
     }
 
-    addCurrentItem() {
-
+    addItem(item) {
+        let found = false;
+        let items = _.map(this.state.items, (todo) => {
+            if (todo.id === item.id) {
+                found = true;
+                return item;
+            }
+            return todo;
+        });
+        if (!found) {
+            items = [...items, item];
+        }
+        this.setState({
+            items
+        });
     }
 }
 

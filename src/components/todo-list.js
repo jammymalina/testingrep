@@ -9,7 +9,7 @@ class TodoList extends Component {
 
     render() {
         const items = this.props.items.map(todo => {
-            return <TodoItem key={todo.id} item={todo} removeItem={this.props.removeItem} setCompleted={this.props.setCompleted} />
+            return <TodoItem key={todo.id} item={todo} removeItem={this.props.removeItem} setCompleted={this.props.setCompleted} handleUpdateClick={this.props.handleUpdateClick} />
         });
         return (
             <div className="panel-group" id="todo-list" role="tablist" aria-multiselectable="true">

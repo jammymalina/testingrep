@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 
+import CalendarForm from './calendar-form';
+
 class TodoForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
             title: props.title ? props.title : '',
-            description: props.description ? props.description : ''
+            description: props.description ? props.description : '',
+            defaultDate: props.defaultDate ? props.defaultDate : null
         };
 
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
@@ -37,6 +40,11 @@ class TodoForm extends Component {
                             id="todo-desc"
                             placeholder="Description" />
                     </div>
+                    <CalendarForm defaultDate={this.state.defaultDate} handleDateChange={(deadline) => {
+                        this.setState({
+                            deadline
+                        });
+                    }} />
                     <button type="submit" className="btn btn-primary" style={{marginRight: '10px'}}>{this.props.btnCaption}</button>
                     <button type="button" className="btn btn-danger" onClick={this.props.handleCancelClick}>Cancel</button>
                 </form>
@@ -46,7 +54,7 @@ class TodoForm extends Component {
 
     handleFormSubmit(event) {
         event.preventDefault();
-        this.props.handleFormSubmit(this.state.title, this.state.description);
+        this.props.handleFormSubmit(this.state.title, this.state.description, this.state.deadline);
     }
 
     handleTitleEdit(event) {
