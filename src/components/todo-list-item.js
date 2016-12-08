@@ -1,9 +1,11 @@
 import React from 'react';
 
-const TodoItem = ({item}) => {
+const TodoItem = (props) => {
+    const { item, removeItem, setCompleted } = props;
+    const panelClass = item.completed ? 'panel-success' : 'panel-default';
     return (
-        <div className="panel panel-default">
-            <div className="panel-heading" role="tab" id={`todo-heading-${item.id}`}>
+        <div className={`panel ${panelClass}`}>
+            <div className={`panel-heading`} role="tab" id={`todo-heading-${item.id}`}>
                 <h4 className="panel-title pull-left">
                     <a
                         role="button"
@@ -17,10 +19,10 @@ const TodoItem = ({item}) => {
                 </h4>
                 <form className="form-inline pull-right" noValidate>
                     <div className="checkbox">
-                        <input type="checkbox" />
+                        <input type="checkbox" checked={item.completed} onChange={(event) => setCompleted(item.id, event.target.checked)} />
                     </div>
                     <button type="button" className="btn btn-default btn-xs"><span className="glyphicon glyphicon-edit"></span></button>
-                    <button type="button" className="btn btn-danger btn-xs"><span className="glyphicon glyphicon-remove"></span></button>
+                    <button type="button" className="btn btn-danger btn-xs" onClick={() => removeItem(item.id)}><span className="glyphicon glyphicon-remove"></span></button>
                 </form>
                 <div className="clearfix"></div>
             </div>

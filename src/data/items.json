@@ -1,37 +1,37 @@
 [{
-    "id": 1,
+    "id": "6a6d7bcf-ba26-4dff-89f1-248dd1cfd832",
     "title": "Put out trash",
     "description": "Put out trash, don\"t forget to recycle.",
-    "done": false,
+    "completed": false,
     "priority": 2
 }, {
-    "id": 2,
+    "id": "32834b1e-dcfe-4578-8871-2dd6bc037329",
     "title": "Finish Trello",
     "description": "Finish all tasks in your Trello board. Don\"t forget to take regular breaks",
-    "done": false,
+    "completed": false,
     "priority": 1
 }, {
-    "id": 3,
+    "id": "a4bf1187-84b6-4bab-9555-b57fc53db555",
     "title": "Buy soy milk",
     "description": "Don\"t forget to buy soy milk next time you visit a store.",
-    "done": false,
+    "completed": false,
     "priority": 3
 }, {
-    "id": 4,
+    "id": "32d3f3d7-7a91-468b-8631-82d79f390c27",
     "title": "Walk the dog",
     "description": "Walk the dog, ask the hot neighbour out.",
-    "done": false,
+    "completed": false,
     "priority": 2
 }, {
-    "id": 5,
+    "id": "f02debdb-569c-4269-a15b-5c121b8b171a",
     "title": "Read the poem",
     "description": "Read the poem written by your sister, if you don't she will kill you.",
-    "done": false,
+    "completed": false,
     "priority": 3
 }, {
-    "id": 6,
+    "id": "0fc4456a-42da-4492-bd25-f94e3a5e1bed",
     "title": "Call Dave",
     "description": "Call Dave about the Nehalem project, he is getting anxious.",
-    "done": false,
+    "completed": false,
     "priority": 1
 }]
