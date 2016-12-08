@@ -82,7 +82,7 @@ class TodoApp extends Component {
             </div>
         );
     }
-
+    
     handleFormSubmit(title, description, deadline) {
         const item = {
             id: this.state.currentItem.id,
