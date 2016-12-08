@@ -99,7 +99,6 @@ class TodoApp extends Component {
 
     handleUpdateClick(id) {
         const item = _.find(this.state.items, ['id', id]);
-        console.log(item);
         this.setState({
             currentItem: item ? item : null,
             btnCaption: 'Update item'
