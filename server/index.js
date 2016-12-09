@@ -1,10 +1,12 @@
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
 const express = require('express');
+const bodyParser = require('body-parser');
 
 const app = express();
 
 app.use(express.static('public'));
+app.use(bodyParser.json());
 
 const DB_URL = 'mongodb://localhost:27017/todos';
 
@@ -23,13 +25,66 @@ MongoClient.connect(DB_URL, (err, db) => {
 
     app.get('/items', (req, res) => {
         db.collection('items').find().toArray((err, results) => {
-            if (!err)
+            if (!err) {
                 err = null;
+            }
             const result = {
                 error: err,
                 data: results
             };
             res.jsonp(result);
+        });
+    });
+
+    app.get('/items/:id', (req, res) => {
+        db.collection('items').findOne({id: req.params.id}, (err, item) => {
+            if (!err) {
+                err = null;
+            }
+            const result = {
+                error: err,
+                data: item
+            };
+            res.jsonp(result);
+        });
+    });
+
+    app.post('/add', (req, res) => {
+        const item = null || (req.body && req.body.item);
+        if (item) {
+            db.collection('items').insertOne(item, (err, result) => {
+                if (err) {
+                    console.log(err);
+                    res.jsonp({
+                        error: err,
+                        data: null
+                    });
+                } else {
+                    console.log('Item added as', result);
+                    const data = Object.assign({}, item, { _id: result._id });
+                    res.jsonp({
+                        error: null,
+                        data
+                    });
+                }
+            });
+        } else {
+            res.jsonp({
+                error: "No item specified in post data",
+                data: null
+            });
+        }
+    });
+
+    app.delete('/delete', (req, res) => {
+        const items = [] || (req.body && req.body.items);
+        console.log(items);
+        db.collection('items').remove({'id': {'$in': items}}, (err, result) => {
+            if (!err) {
+                res.sendStatus(200);
+            } else {
+                res.sendStatus(400);
+            }
         });
     });
 });

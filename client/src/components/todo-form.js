@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
-import CalendarForm from './calendar-form';
+import CalendarForm, { DATE_FORMAT } from './calendar-form';
+import moment from 'moment';
 
 class TodoForm extends Component {
     constructor(props) {
@@ -8,7 +9,7 @@ class TodoForm extends Component {
         this.state = {
             title: props.title ? props.title : '',
             description: props.description ? props.description : '',
-            defaultDate: props.defaultDate ? props.defaultDate : null
+            deadline: props.defaultDate ? props.defaultDate : moment().add(1, "days").format(DATE_FORMAT)
         };
 
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
@@ -40,7 +41,7 @@ class TodoForm extends Component {
                             id="todo-desc"
                             placeholder="Description" />
                     </div>
-                    <CalendarForm defaultDate={this.state.defaultDate} handleDateChange={(deadline) => {
+                    <CalendarForm defaultDate={this.state.deadline} handleDateChange={(deadline) => {
                         this.setState({
                             deadline
                         });

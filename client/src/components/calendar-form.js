@@ -9,11 +9,9 @@ export const DATE_FORMAT = 'DD/MM/YYYY';
 class CalendarForm extends Component {
     constructor(props) {
         super(props);
-
         this.state = {
             currentDate: props.defaultDate ? props.defaultDate : moment().format(DATE_FORMAT),
         };
-
         this.handleDateChange = this.handleDateChange.bind(this);
     }
 
@@ -35,6 +33,7 @@ class CalendarForm extends Component {
         this.setState({
             currentDate: dateString
         });
+        console.log(dateString);
         this.props.handleDateChange(dateString);
     }
 }

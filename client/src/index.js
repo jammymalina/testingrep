@@ -64,8 +64,8 @@ class TodoApp extends Component {
                                     completed: false,
                                     deadline: null
                                 },
-                                btnCaption: 'Add item'}
-                            )}>
+                                btnCaption: 'Add item'
+                            })}>
                             <span className="glyphicon glyphicon-plus"></span>
                         </button>
                         <button className="btn btn-danger" onClick={this.removeCompleted}>Remove completed items</button>
@@ -109,14 +109,24 @@ class TodoApp extends Component {
         this.fetchData();
     }
 
+    errorAlert(error) {
+        bootbox.alert({
+            size: "small",
+            title: "Database error",
+            message: error,
+        });
+    }
+
     fetchData() {
-        axios.get(`/items`).then(res => {
+        axios.get(`/items`).then((res) => {
             if (res.error) {
-                console.log(res.error);
+                console.error(res.error);
+                this.errorAlert(res.error);
             }
             const data = res.data;
             if (data.error) {
                 console.error(data.error);
+                this.errorAlert(data.error);
             }
             const items = data.data;
             this.setState({
@@ -132,6 +142,7 @@ class TodoApp extends Component {
         this.setState({
             items
         });
+        this.errorAlert("Testing error alert");
     }
 
     removeItem(id) {
@@ -163,11 +174,30 @@ class TodoApp extends Component {
             return todo;
         });
         if (!found) {
-            items = [...items, item];
+            console.log(item);
+            axios.post('/add', {
+                item
+            }).then((res) => {
+                console.log(res);
+                if (res.error) {
+                    console.error(res.error);
+                    this.errorAlert(res.error);
+                }
+                const data = res.data;
+                if (data.error) {
+                    console.error(data.error);
+                    this.errorAlert(data.error);
+                }
+                items = [...items, data.data];
+                this.setState({
+                    items
+                });
+            }).catch((error) => {
+                console.error(error);
+                this.errorAlert(error);
+            });
         }
-        this.setState({
-            items
-        });
+
     }
 }
 

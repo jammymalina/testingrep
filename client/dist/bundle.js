@@ -172,7 +172,8 @@
 	                                        completed: false,
 	                                        deadline: null
 	                                    },
-	                                    btnCaption: 'Add item' });
+	                                    btnCaption: 'Add item'
+	                                });
 	                            } },
 	                        _react2.default.createElement('span', { className: 'glyphicon glyphicon-plus' })
 	                    ),
@@ -226,17 +227,28 @@
 	            this.fetchData();
 	        }
 	    }, {
+	        key: 'errorAlert',
+	        value: function errorAlert(error) {
+	            bootbox.alert({
+	                size: "small",
+	                title: "Database error",
+	                message: error
+	            });
+	        }
+	    }, {
 	        key: 'fetchData',
 	        value: function fetchData() {
 	            var _this3 = this;
 
 	            _axios2.default.get('/items').then(function (res) {
 	                if (res.error) {
-	                    console.log(res.error);
+	                    console.error(res.error);
+	                    _this3.errorAlert(res.error);
 	                }
 	                var data = res.data;
 	                if (data.error) {
 	                    console.error(data.error);
+	                    _this3.errorAlert(data.error);
 	                }
 	                var items = data.data;
 	                _this3.setState({
@@ -253,6 +265,7 @@
 	            this.setState({
 	                items: items
 	            });
+	            this.errorAlert("Testing error alert");
 	        }
 	    }, {
 	        key: 'removeItem',
@@ -278,6 +291,8 @@
 	    }, {
 	        key: 'updateItems',
 	        value: function updateItems(item) {
+	            var _this4 = this;
+
 	            var found = false;
 	            var items = _lodash2.default.map(this.state.items, function (todo) {
 	                if (todo.id === item.id) {
@@ -287,11 +302,29 @@
 	                return todo;
 	            });
 	            if (!found) {
-	                items = [].concat(_toConsumableArray(items), [item]);
+	                console.log(item);
+	                _axios2.default.post('/add', {
+	                    item: item
+	                }).then(function (res) {
+	                    console.log(res);
+	                    if (res.error) {
+	                        console.error(res.error);
+	                        _this4.errorAlert(res.error);
+	                    }
+	                    var data = res.data;
+	                    if (data.error) {
+	                        console.error(data.error);
+	                        _this4.errorAlert(data.error);
+	                    }
+	                    items = [].concat(_toConsumableArray(items), [data.data]);
+	                    _this4.setState({
+	                        items: items
+	                    });
+	                }).catch(function (error) {
+	                    console.error(error);
+	                    _this4.errorAlert(error);
+	                });
 	            }
-	            this.setState({
-	                items: items
-	            });
 	        }
 	    }]);
 
@@ -57623,7 +57656,6 @@
 	        _this.state = {
 	            currentDate: props.defaultDate ? props.defaultDate : (0, _moment2.default)().format(DATE_FORMAT)
 	        };
-
 	        _this.handleDateChange = _this.handleDateChange.bind(_this);
 	        return _this;
 	    }
@@ -57651,6 +57683,7 @@
 	            this.setState({
 	                currentDate: dateString
 	            });
+	            console.log(dateString);
 	            this.props.handleDateChange(dateString);
 	        }
 	    }]);
@@ -70848,6 +70881,10 @@
 
 	var _calendarForm2 = _interopRequireDefault(_calendarForm);
 
+	var _moment = __webpack_require__(224);
+
+	var _moment2 = _interopRequireDefault(_moment);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -70867,7 +70904,7 @@
 	        _this.state = {
 	            title: props.title ? props.title : '',
 	            description: props.description ? props.description : '',
-	            defaultDate: props.defaultDate ? props.defaultDate : null
+	            deadline: props.defaultDate ? props.defaultDate : (0, _moment2.default)().add(1, "days").format(_calendarForm.DATE_FORMAT)
 	        };
 
 	        _this.handleFormSubmit = _this.handleFormSubmit.bind(_this);
@@ -70919,7 +70956,7 @@
 	                            id: 'todo-desc',
 	                            placeholder: 'Description' })
 	                    ),
-	                    _react2.default.createElement(_calendarForm2.default, { defaultDate: this.state.defaultDate, handleDateChange: function handleDateChange(deadline) {
+	                    _react2.default.createElement(_calendarForm2.default, { defaultDate: this.state.deadline, handleDateChange: function handleDateChange(deadline) {
 	                            _this2.setState({
 	                                deadline: deadline
 	                            });
@@ -71003,7 +71040,7 @@
 
 
 	// module
-	exports.push([module.id, "body {\r\n    background-color: #eee;\r\n}\r\n\r\n.white-panel {\r\n    margin-top: 20px;\r\n    background-color: #fff;\r\n    padding: 20px 20px;\r\n    border-radius: 5px;\r\n}\r\n\r\n.todo-form {\r\n    border: 1px solid #ccc;\r\n    border-radius: 5px;\r\n    padding: 20px;\r\n}\r\n\r\n.calendar-form {\r\n    margin-bottom: 20px;\r\n}\r\n\r\n.panel-title small {\r\n    color: #767676;\r\n}\r\n\r\n.red {\r\n    color: red !important;\r\n}\r\n\r\n.shadow-2dp {\r\n    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);\r\n}\r\n\r\n.shadow-3dp {\r\n    box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.14), 0 3px 3px -2px rgba(0, 0, 0, 0.2), 0 1px 8px 0 rgba(0, 0, 0, 0.12);\r\n}\r\n\r\n.shadow-4dp {\r\n    box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.2);\r\n}\r\n\r\n.shadow-6dp {\r\n    box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12), 0 3px 5px -1px rgba(0, 0, 0, 0.2);\r\n}\r\n\r\n.shadow-8dp {\r\n    box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2);\r\n}\r\n\r\n.shadow-16dp {\r\n    box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);\r\n}\r\n\r\n.shadow-24dp {\r\n    box-shadow: 0 9px 46px 8px rgba(0, 0, 0, 0.14), 0 11px 15px -7px rgba(0, 0, 0, 0.12), 0 24px 38px 3px rgba(0, 0, 0, 0.2);\r\n}\r\n\r\n.animation-enter {\r\n   opacity: 0;\r\n}\r\n\r\n.animation-enter.animation-enter-active {\r\n   opacity: 1;\r\n}\r\n\r\n.animation-leave {\r\n   opacity: 1;\r\n}\r\n\r\n.animation-leave.animation-leave-active {\r\n   opacity: 0;\r\n}\r\n", ""]);
+	exports.push([module.id, "body {\r\n    background-color: #eee;\r\n    overflow-y: scroll;\r\n}\r\n\r\n.white-panel {\r\n    margin-top: 20px;\r\n    background-color: #fff;\r\n    padding: 20px 20px;\r\n    border-radius: 5px;\r\n}\r\n\r\n.todo-form {\r\n    border: 1px solid #ccc;\r\n    border-radius: 5px;\r\n    padding: 20px;\r\n}\r\n\r\n.calendar-form {\r\n    margin-bottom: 20px;\r\n}\r\n\r\n.panel-title small {\r\n    color: #767676;\r\n}\r\n\r\n.red {\r\n    color: red !important;\r\n}\r\n\r\n.shadow-2dp {\r\n    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);\r\n}\r\n\r\n.shadow-3dp {\r\n    box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.14), 0 3px 3px -2px rgba(0, 0, 0, 0.2), 0 1px 8px 0 rgba(0, 0, 0, 0.12);\r\n}\r\n\r\n.shadow-4dp {\r\n    box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.2);\r\n}\r\n\r\n.shadow-6dp {\r\n    box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12), 0 3px 5px -1px rgba(0, 0, 0, 0.2);\r\n}\r\n\r\n.shadow-8dp {\r\n    box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2);\r\n}\r\n\r\n.shadow-16dp {\r\n    box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);\r\n}\r\n\r\n.shadow-24dp {\r\n    box-shadow: 0 9px 46px 8px rgba(0, 0, 0, 0.14), 0 11px 15px -7px rgba(0, 0, 0, 0.12), 0 24px 38px 3px rgba(0, 0, 0, 0.2);\r\n}\r\n\r\n.animation-enter {\r\n   opacity: 0;\r\n}\r\n\r\n.animation-enter.animation-enter-active {\r\n   opacity: 1;\r\n}\r\n\r\n.animation-leave {\r\n   opacity: 1;\r\n}\r\n\r\n.animation-leave.animation-leave-active {\r\n   opacity: 0;\r\n}\r\n", ""]);
 
 	// exports
 
