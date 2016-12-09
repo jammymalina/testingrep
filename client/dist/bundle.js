@@ -119,7 +119,7 @@
 	        _this.removeCompleted = _this.removeCompleted.bind(_this);
 	        _this.setCompleted = _this.setCompleted.bind(_this);
 	        _this.handleUpdateClick = _this.handleUpdateClick.bind(_this);
-	        _this.addItem = _this.addItem.bind(_this);
+	        _this.updateItems = _this.updateItems.bind(_this);
 	        _this.handleFormSubmit = _this.handleFormSubmit.bind(_this);
 	        return _this;
 	    }
@@ -206,7 +206,7 @@
 	                description: description,
 	                deadline: deadline
 	            };
-	            this.addItem(item);
+	            this.updateItems(item);
 	            this.setState({
 	                currentItem: null
 	            });
@@ -230,9 +230,18 @@
 	        value: function fetchData() {
 	            var _this3 = this;
 
-	            _axios2.default.get('/src/data/items.json').then(function (res) {
-	                var items = res.data;
-	                _this3.setState({ items: items });
+	            _axios2.default.get('/items').then(function (res) {
+	                if (res.error) {
+	                    console.log(res.error);
+	                }
+	                var data = res.data;
+	                if (data.error) {
+	                    console.error(data.error);
+	                }
+	                var items = data.data;
+	                _this3.setState({
+	                    items: items
+	                });
 	            });
 	        }
 	    }, {
@@ -267,8 +276,8 @@
 	            this.setState({ items: items });
 	        }
 	    }, {
-	        key: 'addItem',
-	        value: function addItem(item) {
+	        key: 'updateItems',
+	        value: function updateItems(item) {
 	            var found = false;
 	            var items = _lodash2.default.map(this.state.items, function (todo) {
 	                if (todo.id === item.id) {

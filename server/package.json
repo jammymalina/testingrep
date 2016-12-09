@@ -1,0 +1,19 @@
+{
+    "name": "server",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "nodemon index.js"
+    },
+    "author": "Jakub Jantosik",
+    "license": "MIT",
+    "dependencies": {
+        "assert": "^1.4.1",
+        "express": "^4.14.0",
+        "mongodb": "^2.2.12"
+    },
+    "devDependencies": {
+        "nodemon": "^1.11.0"
+    }
+}

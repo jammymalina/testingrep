@@ -23,7 +23,7 @@ class TodoApp extends Component {
         this.removeCompleted = this.removeCompleted.bind(this);
         this.setCompleted = this.setCompleted.bind(this);
         this.handleUpdateClick = this.handleUpdateClick.bind(this);
-        this.addItem = this.addItem.bind(this);
+        this.updateItems = this.updateItems.bind(this);
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
     }
 
@@ -82,7 +82,7 @@ class TodoApp extends Component {
             </div>
         );
     }
-    
+
     handleFormSubmit(title, description, deadline) {
         const item = {
             id: this.state.currentItem.id,
@@ -91,7 +91,7 @@ class TodoApp extends Component {
             description,
             deadline
         };
-        this.addItem(item);
+        this.updateItems(item);
         this.setState({
             currentItem: null
         });
@@ -110,9 +110,18 @@ class TodoApp extends Component {
     }
 
     fetchData() {
-        axios.get(`/src/data/items.json`).then(res => {
-            const items = res.data;
-            this.setState({items});
+        axios.get(`/items`).then(res => {
+            if (res.error) {
+                console.log(res.error);
+            }
+            const data = res.data;
+            if (data.error) {
+                console.error(data.error);
+            }
+            const items = data.data;
+            this.setState({
+                items
+            });
         });
     }
 
@@ -144,7 +153,7 @@ class TodoApp extends Component {
         this.setState({ items });
     }
 
-    addItem(item) {
+    updateItems(item) {
         let found = false;
         let items = _.map(this.state.items, (todo) => {
             if (todo.id === item.id) {
