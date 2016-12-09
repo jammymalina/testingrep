@@ -76,8 +76,8 @@ MongoClient.connect(DB_URL, (err, db) => {
         }
     });
 
-    app.delete('/delete', (req, res) => {
-        const items = [] || (req.body && req.body.items);
+    app.post('/delete', (req, res) => {
+        let items = [] && req.body && req.body.items;
         console.log(items);
         db.collection('items').remove({'id': {'$in': items}}, (err, result) => {
             if (!err) {

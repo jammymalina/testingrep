@@ -257,25 +257,37 @@
 	            });
 	        }
 	    }, {
+	        key: 'removeItems',
+	        value: function removeItems(ids) {
+	            var _this4 = this;
+
+	            _axios2.default.post('/delete', {
+	                items: ids
+	            }).then(function (res) {
+	                console.log(res);
+	                if (res.error) {
+	                    console.error(res.error);
+	                    _this4.errorAlert(res.error);
+	                }
+	                _this4.fetchData();
+	            }).catch(function (error) {
+	                console.error(error);
+	                _this4.errorAlert(error);
+	            });
+	        }
+	    }, {
 	        key: 'removeCompleted',
 	        value: function removeCompleted() {
-	            var items = _lodash2.default.filter(this.state.items, function (todo) {
-	                return !todo.completed;
-	            });
-	            this.setState({
-	                items: items
-	            });
-	            this.errorAlert("Testing error alert");
+	            var items = _lodash2.default.reduce(this.state.items, function (arr, todo) {
+	                if (todo.completed) arr.push(todo.id);
+	                return arr;
+	            }, []);
+	            this.removeItems(items);
 	        }
 	    }, {
 	        key: 'removeItem',
 	        value: function removeItem(id) {
-	            var items = _lodash2.default.filter(this.state.items, function (todo) {
-	                return todo.id !== id;
-	            });
-	            this.setState({
-	                items: items
-	            });
+	            this.removeItems([id]);
 	        }
 	    }, {
 	        key: 'setCompleted',
@@ -291,7 +303,7 @@
 	    }, {
 	        key: 'updateItems',
 	        value: function updateItems(item) {
-	            var _this4 = this;
+	            var _this5 = this;
 
 	            var found = false;
 	            var items = _lodash2.default.map(this.state.items, function (todo) {
@@ -309,20 +321,20 @@
 	                    console.log(res);
 	                    if (res.error) {
 	                        console.error(res.error);
-	                        _this4.errorAlert(res.error);
+	                        _this5.errorAlert(res.error);
 	                    }
 	                    var data = res.data;
 	                    if (data.error) {
 	                        console.error(data.error);
-	                        _this4.errorAlert(data.error);
+	                        _this5.errorAlert(data.error);
 	                    }
 	                    items = [].concat(_toConsumableArray(items), [data.data]);
-	                    _this4.setState({
+	                    _this5.setState({
 	                        items: items
 	                    });
 	                }).catch(function (error) {
 	                    console.error(error);
-	                    _this4.errorAlert(error);
+	                    _this5.errorAlert(error);
 	                });
 	            }
 	        }

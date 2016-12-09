@@ -135,23 +135,33 @@ class TodoApp extends Component {
         });
     }
 
+    removeItems(ids) {
+        axios.post('/delete', {
+            items: ids
+        }).then((res) => {
+            console.log(res);
+            if (res.error) {
+                console.error(res.error);
+                this.errorAlert(res.error);
+            }
+            this.fetchData();
+        }).catch((error) => {
+            console.error(error);
+            this.errorAlert(error);
+        });
+    }
+
     removeCompleted() {
-        const items = _.filter(this.state.items, (todo) => {
-            return !todo.completed;
-        });
-        this.setState({
-            items
-        });
-        this.errorAlert("Testing error alert");
+        const items = _.reduce(this.state.items, (arr, todo) => {
+            if (todo.completed)
+                arr.push(todo.id);
+            return arr;
+        }, []);
+        this.removeItems(items);
     }
 
     removeItem(id) {
-        const items = _.filter(this.state.items, (todo) => {
-            return todo.id !== id;
-        });
-        this.setState({
-            items
-        });
+        this.removeItems([id]);
     }
 
     setCompleted(id, completed) {
