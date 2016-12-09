@@ -8,7 +8,7 @@ app.use(express.static('public'));
 
 const DB_URL = 'mongodb://localhost:27017/todos';
 
-MongoClient.connect(DB_URL, function(err, db) {
+MongoClient.connect(DB_URL, (err, db) => {
     console.log('Connecting to db');
     assert.equal(null, err);
     console.log("Connected correctly to server");
