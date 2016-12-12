@@ -1,12 +1,14 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
+import moment from 'moment';
 import _ from 'lodash';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import uuidV4 from 'uuid/v4';
 
 import TodoList from './components/todo-list';
 import TodoForm from './components/todo-form';
+import { DATE_FORMAT } from './components/calendar-form';
 import customStyle from './style/custom.css';
 
 class TodoApp extends Component {
@@ -43,7 +45,8 @@ class TodoApp extends Component {
                         description={this.state.currentItem.description}
                         btnCaption={this.state.btnCaption}
                         handleCancelClick={() => this.setState({currentItem: null})}
-                        handleFormSubmit={this.handleFormSubmit} />
+                        handleFormSubmit={this.handleFormSubmit}
+                    />
                 /*</ReactCSSTransitionGroup>*/
             );
         } else {
@@ -128,7 +131,9 @@ class TodoApp extends Component {
                 console.error(data.error);
                 this.errorAlert(data.error);
             }
-            const items = data.data;
+            const items = _.sortBy(data.data, (todo) => {
+                return moment(todo.deadline, DATE_FORMAT).toDate();
+            });
             this.setState({
                 items
             });
@@ -175,38 +180,32 @@ class TodoApp extends Component {
     }
 
     updateItems(item) {
-        let found = false;
-        let items = _.map(this.state.items, (todo) => {
-            if (todo.id === item.id) {
-                found = true;
-                return item;
-            }
-            return todo;
-        });
-        if (!found) {
-            console.log(item);
-            axios.post('/add', {
-                item
-            }).then((res) => {
-                console.log(res);
-                if (res.error) {
-                    console.error(res.error);
-                    this.errorAlert(res.error);
-                }
-                const data = res.data;
-                if (data.error) {
-                    console.error(data.error);
-                    this.errorAlert(data.error);
-                }
-                items = [...items, data.data];
-                this.setState({
-                    items
-                });
-            }).catch((error) => {
-                console.error(error);
-                this.errorAlert(error);
-            });
+        const foundItem = _.find(this.state.items, { id: item.id });
+        let updateMethod;
+        if (!foundItem) {
+            updateMethod = 'add';
+        } else {
+            updateMethod = 'update';
         }
+
+        axios.post(`/${updateMethod}`, {
+            item
+        }).then((res) => {
+            console.log(res);
+            if (res.error) {
+                console.error(res.error);
+                this.errorAlert(res.error);
+            }
+            const data = res.data;
+            if (data.error) {
+                console.error(data.error);
+                this.errorAlert(data.error);
+            }
+            this.fetchData();
+        }).catch((error) => {
+            console.error(error);
+            this.errorAlert(error);
+        });
 
     }
 }

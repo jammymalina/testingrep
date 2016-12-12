@@ -37,7 +37,7 @@ MongoClient.connect(DB_URL, (err, db) => {
     });
 
     app.get('/items/:id', (req, res) => {
-        db.collection('items').findOne({id: req.params.id}, (err, item) => {
+        db.collection('items').findOne({ id: req.params.id }, (err, item) => {
             if (!err) {
                 err = null;
             }
@@ -70,7 +70,40 @@ MongoClient.connect(DB_URL, (err, db) => {
             });
         } else {
             res.jsonp({
-                error: "No item specified in post data",
+                error: 'No item specified in post data',
+                data: null
+            });
+        }
+    });
+
+    app.post('/update', (req, res) => {
+        const item = null || (req.body && req.body.item);
+        console.log('Item update incoming:', item);
+        if (item) {
+            db.collection('items').findAndModify(
+                { id: item.id },   // query
+                [],                // sort
+                { $set: item },    // replacement
+                { new: true },     // options - return udated item
+                (err, result) => {
+                    if (err) {
+                        console.log(err);
+                        res.jsonp({
+                            error: err,
+                            data: null
+                        });
+                    } else {
+                        console.log('Item update: ', result);
+                        res.jsonp({
+                            error: null,
+                            data: result.value
+                        });
+                    }
+                }
+            );
+        } else {
+            res.jsonp({
+                error: 'No item specified in post data',
                 data: null
             });
         }
@@ -78,7 +111,6 @@ MongoClient.connect(DB_URL, (err, db) => {
 
     app.post('/delete', (req, res) => {
         let items = [] && req.body && req.body.items;
-        console.log(items);
         db.collection('items').remove({'id': {'$in': items}}, (err, result) => {
             if (!err) {
                 res.sendStatus(200);
