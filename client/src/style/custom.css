@@ -16,11 +16,15 @@ body {
     padding: 20px;
 }
 
+.bg-white {
+    background-color: white !important;
+}
+
 .calendar-form {
     margin-bottom: 20px;
 }
 
-.panel-title small {
+.panel-title, .panel-footer small {
     color: #767676;
 }
 

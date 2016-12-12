@@ -18,7 +18,8 @@ const TodoItem = (props) => {
                         data-parent="#todo-list"
                         href={'#todo-collapse-' + item.id}
                         aria-expanded="true"
-                        aria-controls={'todo-collapse-' + item.id}>
+                        aria-controls={'todo-collapse-' + item.id}
+                    >
                             {item.title}
                     </a>
                     {!item.completed && deadline.isBefore(now) ? <small className='red'> You missed a deadline you lazy piece of shit</small> : null}
@@ -41,6 +42,9 @@ const TodoItem = (props) => {
             <div id={'todo-collapse-' + item.id} className="panel-collapse collapse" role="tabpanel" aria-labelledby={'todo-heading-' + item.id}>
                 <div className="panel-body">
                     {item.description}
+                </div>
+                <div className="panel-footer bg-white">
+                    <small>Deadline: {moment(item.deadline, DATE_FORMAT).format('MMMM Do YYYY')}</small>
                 </div>
             </div>
         </div>

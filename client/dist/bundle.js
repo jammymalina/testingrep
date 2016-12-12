@@ -125,6 +125,7 @@
 	        _this.handleUpdateClick = _this.handleUpdateClick.bind(_this);
 	        _this.updateItems = _this.updateItems.bind(_this);
 	        _this.handleFormSubmit = _this.handleFormSubmit.bind(_this);
+	        _this.errorAlert = _this.errorAlert.bind(_this);
 	        return _this;
 	    }
 
@@ -250,7 +251,7 @@
 	                    console.error(res.error);
 	                    _this3.errorAlert(res.error);
 	                }
-	                var data = res.data;
+	                var data = res.data ? res.data : { data: [], error: "No data found." };
 	                if (data.error) {
 	                    console.error(data.error);
 	                    _this3.errorAlert(data.error);
@@ -299,18 +300,29 @@
 	    }, {
 	        key: 'setCompleted',
 	        value: function setCompleted(id, completed) {
-	            var items = _lodash2.default.map(this.state.items, function (todo) {
-	                if (todo.id === id) {
-	                    todo.completed = completed;
+	            var _this5 = this;
+
+	            _axios2.default.post('/setcompleted/' + id + '=' + completed).then(function (res) {
+	                console.log(res);
+	                if (res.error) {
+	                    console.error(res.error);
+	                    _this5.errorAlert(res.error);
 	                }
-	                return todo;
+	                var data = res.data;
+	                if (data.error) {
+	                    console.error(data.error);
+	                    _this5.errorAlert(data.error);
+	                }
+	                _this5.fetchData();
+	            }).catch(function (error) {
+	                console.error(error);
+	                _this5.errorAlert(error);
 	            });
-	            this.setState({ items: items });
 	        }
 	    }, {
 	        key: 'updateItems',
 	        value: function updateItems(item) {
-	            var _this5 = this;
+	            var _this6 = this;
 
 	            var foundItem = _lodash2.default.find(this.state.items, { id: item.id });
 	            var updateMethod = void 0;
@@ -326,17 +338,17 @@
 	                console.log(res);
 	                if (res.error) {
 	                    console.error(res.error);
-	                    _this5.errorAlert(res.error);
+	                    _this6.errorAlert(res.error);
 	                }
 	                var data = res.data;
 	                if (data.error) {
 	                    console.error(data.error);
-	                    _this5.errorAlert(data.error);
+	                    _this6.errorAlert(data.error);
 	                }
-	                _this5.fetchData();
+	                _this6.fetchData();
 	            }).catch(function (error) {
 	                console.error(error);
-	                _this5.errorAlert(error);
+	                _this6.errorAlert(error);
 	            });
 	        }
 	    }]);
@@ -57558,7 +57570,8 @@
 	                        'data-parent': '#todo-list',
 	                        href: '#todo-collapse-' + item.id,
 	                        'aria-expanded': 'true',
-	                        'aria-controls': 'todo-collapse-' + item.id },
+	                        'aria-controls': 'todo-collapse-' + item.id
+	                    },
 	                    item.title
 	                ),
 	                !item.completed && deadline.isBefore(now) ? _react2.default.createElement(
@@ -57616,6 +57629,16 @@
 	                'div',
 	                { className: 'panel-body' },
 	                item.description
+	            ),
+	            _react2.default.createElement(
+	                'div',
+	                { className: 'panel-footer bg-white' },
+	                _react2.default.createElement(
+	                    'small',
+	                    null,
+	                    'Deadline: ',
+	                    (0, _moment2.default)(item.deadline, _calendarForm.DATE_FORMAT).format('MMMM Do YYYY')
+	                )
 	            )
 	        )
 	    );
@@ -57696,7 +57719,6 @@
 	            this.setState({
 	                currentDate: dateString
 	            });
-	            console.log(dateString);
 	            this.props.handleDateChange(dateString);
 	        }
 	    }]);
@@ -70951,7 +70973,8 @@
 	                            onChange: this.handleTitleEdit,
 	                            value: this.state.title,
 	                            id: 'todo-title',
-	                            placeholder: 'Title' })
+	                            placeholder: 'Title'
+	                        })
 	                    ),
 	                    _react2.default.createElement(
 	                        'div',
@@ -70967,7 +70990,8 @@
 	                            onChange: this.handleDescEdit,
 	                            value: this.state.description,
 	                            id: 'todo-desc',
-	                            placeholder: 'Description' })
+	                            placeholder: 'Description'
+	                        })
 	                    ),
 	                    _react2.default.createElement(_calendarForm2.default, { defaultDate: this.state.deadline, handleDateChange: function handleDateChange(deadline) {
 	                            _this2.setState({
@@ -71053,7 +71077,7 @@
 
 
 	// module
-	exports.push([module.id, "body {\r\n    background-color: #eee;\r\n    overflow-y: scroll;\r\n}\r\n\r\n.white-panel {\r\n    margin-top: 20px;\r\n    background-color: #fff;\r\n    padding: 20px 20px;\r\n    border-radius: 5px;\r\n}\r\n\r\n.todo-form {\r\n    border: 1px solid #ccc;\r\n    border-radius: 5px;\r\n    padding: 20px;\r\n}\r\n\r\n.calendar-form {\r\n    margin-bottom: 20px;\r\n}\r\n\r\n.panel-title small {\r\n    color: #767676;\r\n}\r\n\r\n.red {\r\n    color: red !important;\r\n}\r\n\r\n.shadow-2dp {\r\n    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);\r\n}\r\n\r\n.shadow-3dp {\r\n    box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.14), 0 3px 3px -2px rgba(0, 0, 0, 0.2), 0 1px 8px 0 rgba(0, 0, 0, 0.12);\r\n}\r\n\r\n.shadow-4dp {\r\n    box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.2);\r\n}\r\n\r\n.shadow-6dp {\r\n    box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12), 0 3px 5px -1px rgba(0, 0, 0, 0.2);\r\n}\r\n\r\n.shadow-8dp {\r\n    box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2);\r\n}\r\n\r\n.shadow-16dp {\r\n    box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);\r\n}\r\n\r\n.shadow-24dp {\r\n    box-shadow: 0 9px 46px 8px rgba(0, 0, 0, 0.14), 0 11px 15px -7px rgba(0, 0, 0, 0.12), 0 24px 38px 3px rgba(0, 0, 0, 0.2);\r\n}\r\n\r\n.animation-enter {\r\n   opacity: 0;\r\n}\r\n\r\n.animation-enter.animation-enter-active {\r\n   opacity: 1;\r\n}\r\n\r\n.animation-leave {\r\n   opacity: 1;\r\n}\r\n\r\n.animation-leave.animation-leave-active {\r\n   opacity: 0;\r\n}\r\n", ""]);
+	exports.push([module.id, "body {\r\n    background-color: #eee;\r\n    overflow-y: scroll;\r\n}\r\n\r\n.white-panel {\r\n    margin-top: 20px;\r\n    background-color: #fff;\r\n    padding: 20px 20px;\r\n    border-radius: 5px;\r\n}\r\n\r\n.todo-form {\r\n    border: 1px solid #ccc;\r\n    border-radius: 5px;\r\n    padding: 20px;\r\n}\r\n\r\n.bg-white {\r\n    background-color: white !important;\r\n}\r\n\r\n.calendar-form {\r\n    margin-bottom: 20px;\r\n}\r\n\r\n.panel-title, .panel-footer small {\r\n    color: #767676;\r\n}\r\n\r\n.red {\r\n    color: red !important;\r\n}\r\n\r\n.shadow-2dp {\r\n    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);\r\n}\r\n\r\n.shadow-3dp {\r\n    box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.14), 0 3px 3px -2px rgba(0, 0, 0, 0.2), 0 1px 8px 0 rgba(0, 0, 0, 0.12);\r\n}\r\n\r\n.shadow-4dp {\r\n    box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.2);\r\n}\r\n\r\n.shadow-6dp {\r\n    box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12), 0 3px 5px -1px rgba(0, 0, 0, 0.2);\r\n}\r\n\r\n.shadow-8dp {\r\n    box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2);\r\n}\r\n\r\n.shadow-16dp {\r\n    box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);\r\n}\r\n\r\n.shadow-24dp {\r\n    box-shadow: 0 9px 46px 8px rgba(0, 0, 0, 0.14), 0 11px 15px -7px rgba(0, 0, 0, 0.12), 0 24px 38px 3px rgba(0, 0, 0, 0.2);\r\n}\r\n\r\n.animation-enter {\r\n   opacity: 0;\r\n}\r\n\r\n.animation-enter.animation-enter-active {\r\n   opacity: 1;\r\n}\r\n\r\n.animation-leave {\r\n   opacity: 1;\r\n}\r\n\r\n.animation-leave.animation-leave-active {\r\n   opacity: 0;\r\n}\r\n", ""]);
 
 	// exports
 

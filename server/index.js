@@ -51,10 +51,11 @@ MongoClient.connect(DB_URL, (err, db) => {
 
     app.post('/add', (req, res) => {
         const item = null || (req.body && req.body.item);
+        console.log('Item addition incoming:', item);
         if (item) {
             db.collection('items').insertOne(item, (err, result) => {
                 if (err) {
-                    console.log(err);
+                    console.error(err);
                     res.jsonp({
                         error: err,
                         data: null
@@ -87,7 +88,7 @@ MongoClient.connect(DB_URL, (err, db) => {
                 { new: true },     // options - return udated item
                 (err, result) => {
                     if (err) {
-                        console.log(err);
+                        console.error(err);
                         res.jsonp({
                             error: err,
                             data: null
@@ -109,12 +110,41 @@ MongoClient.connect(DB_URL, (err, db) => {
         }
     });
 
+    app.post('/setcompleted/:id=:completed', (req, res) => {
+        const id = req.params.id;
+        const completed = req.params.completed === 'true';
+        db.collection('items').findAndModify(
+            { id },            // query
+            [],                // sort
+            { $set: {
+                completed      // replacement
+            }},
+            { new: true },     // options - return udated item
+            (err, result) => {
+                if (err) {
+                    console.error(err);
+                    res.jsonp({
+                        error: err,
+                        data: null
+                    });
+                } else {
+                    console.log('Item update: ', result);
+                    res.jsonp({
+                        error: null,
+                        data: result.value
+                    });
+                }
+            }
+        );
+    });
+
     app.post('/delete', (req, res) => {
         let items = [] && req.body && req.body.items;
         db.collection('items').remove({'id': {'$in': items}}, (err, result) => {
             if (!err) {
                 res.sendStatus(200);
             } else {
+                console.error(err);
                 res.sendStatus(400);
             }
         });

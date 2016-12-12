@@ -33,7 +33,6 @@ class CalendarForm extends Component {
         this.setState({
             currentDate: dateString
         });
-        console.log(dateString);
         this.props.handleDateChange(dateString);
     }
 }

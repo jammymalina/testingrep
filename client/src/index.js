@@ -27,6 +27,7 @@ class TodoApp extends Component {
         this.handleUpdateClick = this.handleUpdateClick.bind(this);
         this.updateItems = this.updateItems.bind(this);
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
+        this.errorAlert = this.errorAlert.bind(this);
     }
 
     render() {
@@ -126,7 +127,7 @@ class TodoApp extends Component {
                 console.error(res.error);
                 this.errorAlert(res.error);
             }
-            const data = res.data;
+            const data = res.data ? res.data : { data: [], error: "No data found." };
             if (data.error) {
                 console.error(data.error);
                 this.errorAlert(data.error);
@@ -170,13 +171,22 @@ class TodoApp extends Component {
     }
 
     setCompleted(id, completed) {
-        const items = _.map(this.state.items, (todo) => {
-            if (todo.id === id) {
-                todo.completed = completed;
+        axios.post(`/setcompleted/${id}=${completed}`).then((res) => {
+            console.log(res);
+            if (res.error) {
+                console.error(res.error);
+                this.errorAlert(res.error);
             }
-            return todo;
+            const data = res.data;
+            if (data.error) {
+                console.error(data.error);
+                this.errorAlert(data.error);
+            }
+            this.fetchData();
+        }).catch((error) => {
+            console.error(error);
+            this.errorAlert(error);
         });
-        this.setState({ items });
     }
 
     updateItems(item) {
@@ -211,5 +221,5 @@ class TodoApp extends Component {
 }
 
 ReactDOM.render(
-    <TodoApp/>, document.getElementById('todoapp')
+    <TodoApp />, document.getElementById('todoapp')
 );

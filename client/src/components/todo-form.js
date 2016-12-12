@@ -29,7 +29,8 @@ class TodoForm extends Component {
                             onChange={this.handleTitleEdit}
                             value={this.state.title}
                             id="todo-title"
-                            placeholder="Title" />
+                            placeholder="Title"
+                        />
                     </div>
                     <div className="form-group">
                         <label htmlFor="todo-desc">Description</label>
@@ -39,7 +40,8 @@ class TodoForm extends Component {
                             onChange={this.handleDescEdit}
                             value={this.state.description}
                             id="todo-desc"
-                            placeholder="Description" />
+                            placeholder="Description"
+                        />
                     </div>
                     <CalendarForm defaultDate={this.state.deadline} handleDateChange={(deadline) => {
                         this.setState({
